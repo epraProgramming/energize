@@ -10,9 +10,13 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Ultrasonic;
+
+//import frc.robot.LimelightHelpers.LimelightResults;
+//import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
 
 /** This is a demo program showing how to use Mecanum control with the MecanumDrive class. */
 public class Robot extends TimedRobot {
@@ -27,19 +31,6 @@ public class Robot extends TimedRobot {
   private static final int kFrontRightChannelR = 5;
   private static final int kRearRightChannelR = 7;
 
-/* For the second test robot
-  private static final int kFrontLeftChannel = 4;
-  private static final int kRearLeftChannel = 0;
-  private static final int kFrontRightChannel = 6;
-  private static final int kRearRightChannel = 2;
-
-  private static final int kFrontLeftChannelMini = 5;
-  private static final int kRearLeftChannelMini = 1;
-  private static final int kFrontRightChannelMini = 7;
-  private static final int kRearRightChannelMini = 3;
- */
-
-  private MecanumDrive m_robotDrive;
     /* end drive train */
 
     /* arm and claw */
@@ -77,6 +68,9 @@ Spark rearLeftR = new Spark(kRearLeftChannelR);
 Spark frontRightR = new Spark(kFrontRightChannelR);
 Spark rearRightR = new Spark(kRearRightChannelR);
 
+//Shooter init
+Shooter theShooter = new Shooter(); 
+
   @Override
   public void robotInit() {
       /* init drivetrain * /
@@ -90,6 +84,7 @@ Spark rearRightR = new Spark(kRearRightChannelR);
 		Spark frontRightR = new Spark(kFrontRightChannelR);
 		Spark rearRightR = new Spark(kRearRightChannelR);
 */
+
 		// Invert the right side motors.
 		frontRightF.setInverted(true);
 		frontRightR.setInverted(true);
@@ -127,11 +122,35 @@ Spark rearRightR = new Spark(kRearRightChannelR);
       leftX = leftX * 0.35;
       rightX = rightX * 0.35;
     }
+
+    LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
+    LimelightHelpers.LimelightTarget_Fiducial[] AprilTags = llresults.targetingResults.targets_Fiducials;
+
+    SmartDashboard.putNumber("botpose X", llresults.targetingResults.getBotPose3d().getX());
+    SmartDashboard.putNumber("botpose Y", llresults.targetingResults.getBotPose3d().getY());
+    SmartDashboard.putNumber("botpose Z", llresults.targetingResults.getBotPose3d().getZ());
+
+    SmartDashboard.putNumber("botpose red X", llresults.targetingResults.getBotPose3d_wpiRed().getX());
+    SmartDashboard.putNumber("botpose red Y", llresults.targetingResults.getBotPose3d_wpiRed().getY());
+    SmartDashboard.putNumber("botpose red Z", llresults.targetingResults.getBotPose3d_wpiRed().getZ());
+    
+    SmartDashboard.putNumber("botpose blue X", llresults.targetingResults.getBotPose3d_wpiBlue().getX());
+    SmartDashboard.putNumber("botpose blue Y", llresults.targetingResults.getBotPose3d_wpiBlue().getY());
+    SmartDashboard.putNumber("botpose blue Z", llresults.targetingResults.getBotPose3d_wpiBlue().getZ());
+    SmartDashboard.putBoolean("botpose Valid", llresults.targetingResults.valid);
+    SmartDashboard.putNumber("botpose targets", llresults.targetingResults.targets_Fiducials.length);
+
 //    m_robotDrive.driveCartesian(leftY, leftX, rightX);
-if (driveStick.getAButton()) {
+/*if (opStick.getAButton()) {
+  System.out.print("(" + llresults.targetingResults.getBotPose3d().getX() + "," + llresults.targetingResults.getBotPose3d().getY() + "," + llresults.targetingResults.getBotPose3d().getZ() + ")");
+  System.out.print("(" + llresults.targetingResults.getBotPose3d_wpiRed().getX() + "," + llresults.targetingResults.getBotPose3d_wpiRed().getY() + "," + llresults.targetingResults.getBotPose3d_wpiRed().getZ() + ")");
+  System.out.print("(" + llresults.targetingResults.getBotPose3d_wpiBlue().getX() + "," + llresults.targetingResults.getBotPose3d_wpiBlue().getY() + "," + llresults.targetingResults.getBotPose3d_wpiBlue().getZ() + ")");
+}*/
+/*if (driveStick.getAButton()) {
   frontLeftF.set(driveStick.getLeftY());
   frontRightF.set(driveStick.getRightY());
 }
+*/
 if (driveStick.getBButton()) {
   frontLeftR.set(driveStick.getLeftY());
   frontRightR.set(driveStick.getRightY());
@@ -152,38 +171,58 @@ if (driveStick.getYButton()) {
       /* end drive controls */
 
       /* claw controls */
-      clawFront.set(opStick.getLeftX()); 
+      /*clawFront.set(opStick.getLeftX()); 
       clawBack.set(-1 * opStick.getLeftX());
-      arm.set(opStick.getRightY());
+      arm.set(opStick.getRightY());*/
       /* end of claw controls */
 
       /* shooter control */
-    shooterBack.set (opStick.getLeftTriggerAxis() - opStick.getRightTriggerAxis());
-    shooterFront.set (-1 * (opStick.getLeftTriggerAxis() - opStick.getRightTriggerAxis()));
+    /*shooterBack.set (opStick.getLeftTriggerAxis() - opStick.getRightTriggerAxis());
+    shooterFront.set (-1 * (opStick.getLeftTriggerAxis() - opStick.getRightTriggerAxis()));*/
     double aSpeed = 0;
-    if (opStick.getAButton()) {
-      aSpeed = 0.5;
+    
+    if (opStick.getAButton()) { // high shelf 
+      theShooter.shoot(2);
     }
-    if (opStick.getBButton()) {
-      aSpeed = -0.5;
+    if (opStick.getBButton()) { // high on low battery 
+      theShooter.shoot(3);
     }
-    if (opStick.getYButton()) {
-      aSpeed = 1.0;
+    if (opStick.getYButton()) { // mid shelf 
+      theShooter.shoot(1);
     }
-    if (opStick.getXButton()) {
-      aSpeed = -1.0;
+    if (opStick.getXButton()) { // full speed lob shot
+      theShooter.shoot(0);
     }
-    advancer.set (aSpeed);
+
+    if (aSpeed >= 0.01) {
+      shooterFront.set (aSpeed);
+      shooterBack.set (aSpeed * -1);
+    }else{
+      shooterFront.set (0);
+      shooterBack.set (0);
+    }
+
+    if (opStick.getRightBumper()) {
+      advancer.set(1);
+    }
+    if (opStick.getLeftBumper()) {
+      advancer.set(-1);
+    }
+//    advancer.set (aSpeed);
       /* end of shooter control */
 
-      /* flag control */
+      /* flag control */ /* 
     if (opStick.getLeftBumper()) {
       flag.set(0.5);
     } else if (opStick.getRightBumper()) {
       flag.set(-0.5);
     } else {
-      flag.set(0);
-    }
+      flag.set(0); 
+    
+    }*/
+
+    flag.set(opStick.getRightY());
+
       /* end of flag control */
     }
 }

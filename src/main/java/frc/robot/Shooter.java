@@ -18,12 +18,15 @@ public class Shooter {
 	private CANSparkMax shooterBack;
 	private DigitalInput cubeDetector;
 
-	Shooter(int shooterAdvancerId, int shooterFrontId, int shooterBackId, int cubeDetectorId) {
+	Shooter() {
+		
+	}
+	/*Shooter(int shooterAdvancerId, int shooterFrontId, int shooterBackId, int cubeDetectorId) {
 		advancer = new CANSparkMax(shooterAdvancerId, MotorType.kBrushless);
 		shooterFront = new CANSparkMax(shooterFrontId, MotorType.kBrushless);
 		shooterBack = new CANSparkMax(shooterBackId, MotorType.kBrushless);
 		cubeDetector = new DigitalInput(cubeDetectorId);
-	}
+	}*/
 
 	public void intake() {
 		advancer.set(1);
@@ -44,23 +47,23 @@ public class Shooter {
 		activeShooter = true;
 		double targetSpeed = 0;
 		switch (speedTarget) {
-			case 0: // full speed foward
+			case 0: // full speed lob shot
 			targetSpeed = 1;
 			break;
-			case 1: // full speed backward
-			targetSpeed = -1;
+			case 1: // mid shot
+			targetSpeed = 0.40;
 			break;
-			case 2: // half speed foward
-			targetSpeed = 0.5;
+			case 2: // high shot
+			targetSpeed = 0.60;
 			break;
-			case 3: // half speed backward
-			targetSpeed = -0.5;
+			case 3: // high shot on low battery
+			targetSpeed = 0.80;
 			break;
 		} 
 		shooterFront.set(targetSpeed); 
 		shooterBack.set(targetSpeed * -1); // shooterBack needs reverse speed value
 
-		if (shooterStep == 0 && curShooterFront == targetSpeed && curShooterBack == targetSpeed) {
+		/*if (shooterStep == 0 && curShooterFront == targetSpeed && curShooterBack == targetSpeed) {
 			shooterStep = 1;
 		}
 
@@ -79,9 +82,13 @@ public class Shooter {
 			shooterStep = 0;
 			targetSpeed = 0;
 			return;
-			}
+			}*/
+			advancer.set(0);
+			shooterFront.set(0);
+			shooterBack.set(0);
+			targetSpeed = 0;
 		}
-	}
+	
 
 	// grabbed code from early robot tesing code
 	/* shooter control */
