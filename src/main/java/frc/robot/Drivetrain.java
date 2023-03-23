@@ -1,4 +1,4 @@
-package frc;
+package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -8,10 +8,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 
 
-public class drivetrain {
+public class Drivetrain {
 	private MecanumDrive m_robotDrive;
 
-	drivetrain(int kFrontLeftChannelF,int kRearLeftChannelF,int kFrontRightChannelF,int kRearRightChannelF,
+	Drivetrain(int kFrontLeftChannelF,int kRearLeftChannelF,int kFrontRightChannelF,int kRearRightChannelF,
 	int kFrontLeftChannelR, int kRearLeftChannelR, int kFrontRightChannelR, int kRearRightChannelR) {
 		Spark frontLeftF = new Spark(kFrontLeftChannelF);
 		Spark rearLeftF = new Spark(kRearLeftChannelF);
