@@ -4,9 +4,8 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
-import edu.wpi.first.math.geometry.Pose2d;
+//import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-
 
 public class Drivetrain {
 	private MecanumDrive m_robotDrive;
@@ -26,7 +25,7 @@ public class Drivetrain {
 		// Invert the right side motors.
 		frontRightF.setInverted(true);
 		frontRightR.setInverted(true);
-		rearRightR.setInverted(true);
+		rearRightF.setInverted(true); 
 		rearRightR.setInverted(true);
 
 		MotorControllerGroup frontLeftGroup = new MotorControllerGroup(frontLeftF, frontLeftR);
@@ -37,7 +36,7 @@ public class Drivetrain {
 		m_robotDrive = new MecanumDrive(frontLeftGroup, rearLeftGroup, frontRightGroup, rearRightGroup);
 	}
 
-	void driveRobot (double fbAxis, double lrAxis, double sAxis) {
+	void driveRobot (double fbAxis, double sAxis, double lrAxis) {
 		m_robotDrive.driveCartesian(fbAxis, lrAxis, sAxis);
 	}
 

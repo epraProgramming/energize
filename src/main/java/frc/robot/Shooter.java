@@ -11,6 +11,15 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+/* shooter */
+	/*private CANSparkMax advancer = new CANSparkMax (4, MotorType.kBrushless);
+	private CANSparkMax shooterFront = new CANSparkMax (5, MotorType.kBrushless); 
+	private CANSparkMax shooterBack = new CANSparkMax (6, MotorType.kBrushless);*/
+/* end of shooter */
+ /* shooter control */
+    /*shooterBack.set (opStick.getLeftTriggerAxis() - opStick.getRightTriggerAxis());
+    shooterFront.set (-1 * (opStick.getLeftTriggerAxis() - opStick.getRightTriggerAxis()));*/
+
 public class Shooter {
 	
 	private CANSparkMax advancer;
@@ -18,8 +27,19 @@ public class Shooter {
 	private CANSparkMax shooterBack;
 	private DigitalInput cubeDetector;
 
-	Shooter() {
-		
+	private DigitalInput lowCube;
+	private DigitalInput highCube;
+//	private DigitalInput frontCube;
+
+	Shooter(int frontId, int backId, int advancerId, int lowCubeId, int highCubeId) {
+		shooterFront = new CANSparkMax(frontId, MotorType.kBrushed);
+		shooterBack = new CANSparkMax(backId, MotorType.kBrushed);
+		advancer = new CANSparkMax(advancerId, MotorType.kBrushed);
+
+		cubeDetector = new DigitalInput(lowCubeId);
+		lowCube = new DigitalInput(lowCubeId);
+		highCube = new DigitalInput(highCubeId);
+		//frontCube = new DigitalInput(frontCubeId);
 	}
 	/*Shooter(int shooterAdvancerId, int shooterFrontId, int shooterBackId, int cubeDetectorId) {
 		advancer = new CANSparkMax(shooterAdvancerId, MotorType.kBrushless);
