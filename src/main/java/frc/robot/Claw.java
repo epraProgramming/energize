@@ -7,6 +7,17 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+/* arm and claw */
+    /*private CANSparkMax clawFront = new CANSparkMax (1, MotorType.kBrushless); 
+    private CANSparkMax clawBack = new CANSparkMax (2, MotorType.kBrushless);
+    private CANSparkMax arm = new CANSparkMax (3, MotorType.kBrushless);*/
+/* end of arm and claw */
+/* claw controls */
+      /*clawFront.set(opStick.getLeftX()); 
+      clawBack.set(-1 * opStick.getLeftX());
+      arm.set(opStick.getRightY());*/
+/* end of claw controls */
+
 /** Add your docs here. */
 public class Claw {
 	private CANSparkMax clawFront; 

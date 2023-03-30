@@ -25,20 +25,31 @@ public class Shooter {
 	private CANSparkMax advancer;
 	private CANSparkMax shooterFront;
 	private CANSparkMax shooterBack;
+
+	private CANSparkMax frontIntake;
+	private CANSparkMax flag;
+
 	private DigitalInput cubeDetector;
 
 	private DigitalInput lowCube;
 	private DigitalInput highCube;
+
+	private Timer shootTimer;
 //	private DigitalInput frontCube;
+	private boolean flagDropped = false;
 
-	Shooter(int frontId, int backId, int advancerId, int lowCubeId, int highCubeId) {
-		shooterFront = new CANSparkMax(frontId, MotorType.kBrushed);
-		shooterBack = new CANSparkMax(backId, MotorType.kBrushed);
-		advancer = new CANSparkMax(advancerId, MotorType.kBrushed);
+	Shooter(int frontId, int backId, int advancerId, int lowCubeId, int highCubeId, int frontIntakeId, int flagId) {
+		shooterFront = new CANSparkMax(frontId, MotorType.kBrushless);
+		shooterBack = new CANSparkMax(backId, MotorType.kBrushless);
+		advancer = new CANSparkMax(advancerId, MotorType.kBrushless);
 
-		cubeDetector = new DigitalInput(lowCubeId);
+		frontIntake = new CANSparkMax(frontIntakeId, MotorType.kBrushless);
+		flag = new CANSparkMax(flagId, MotorType.kBrushed);
+
+		shootTimer = new Timer(0);
+		/*cubeDetector = new DigitalInput(lowCubeId);
 		lowCube = new DigitalInput(lowCubeId);
-		highCube = new DigitalInput(highCubeId);
+		highCube = new DigitalInput(highCubeId);*/
 		//frontCube = new DigitalInput(frontCubeId);
 	}
 	/*Shooter(int shooterAdvancerId, int shooterFrontId, int shooterBackId, int cubeDetectorId) {
@@ -54,6 +65,14 @@ public class Shooter {
 
 	public void intakeEject() {
 		advancer.set(-1);
+	}
+
+	public void frontIntake() {
+		frontIntake.set(1);
+	}
+
+	public void frontIntakeEject() {
+		frontIntake.set(-1);
 	}
 
 	//shooter code not yet done
@@ -109,6 +128,23 @@ public class Shooter {
 			targetSpeed = 0;
 		}
 	
+		public void dropFlag() {
+			shootTimer.reset(1000);
+			flag.set(0.5);
+			if (shootTimer.timerElasped() == true) {
+				flagDropped = true;
+				return;
+			}
+		}
+
+		public void raiseFlag() {
+			shootTimer.reset(1000);
+			flag.set(-0.5);
+			if (shootTimer.timerElasped() == true) {
+				flagDropped = false;
+				return;
+			}
+		}
 
 	// grabbed code from early robot tesing code
 	/* shooter control */

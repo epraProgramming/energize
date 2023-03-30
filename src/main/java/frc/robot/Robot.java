@@ -27,6 +27,8 @@ public class Robot extends TimedRobot {
   private static final int kFrontRightChannelR = 5;
   private static final int kRearRightChannelR = 7;
 
+  private Timer theTimer;
+
   private Drivetrain theDrivetrain;
     /* end drive train */
 
@@ -35,7 +37,7 @@ public class Robot extends TimedRobot {
     /* end shooter */
 
     /* flag */
-  private CANSparkMax flag = new CANSparkMax (7, MotorType.kBrushed);
+//  private CANSparkMax flag = new CANSparkMax (7, MotorType.kBrushed);
     /* end of flag */
   
     /* controllers */
@@ -49,17 +51,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-
+      /* init shooter */
+    theShooter = new Shooter(6, 5, 4, 0, 1, 3, 7); 
+      /* end shooter init */
+    
       /* init drivetrain */
     theDrivetrain = new Drivetrain(
-              kFrontLeftChannelF, kRearLeftChannelF, kFrontRightChannelF, kRearRightChannelF,
-              kFrontLeftChannelR, kRearLeftChannelR, kFrontRightChannelR, kRearRightChannelR
-            );
+      kFrontLeftChannelF, kRearLeftChannelF, kFrontRightChannelF, kRearRightChannelF,
+      kFrontLeftChannelR, kRearLeftChannelR, kFrontRightChannelR, kRearRightChannelR
+    );
       /* end drivetrain init */
-
-      /* init shooter */
-    theShooter = new Shooter(1, 2, 3, 0, 1); 
-      /* end shooter init */
   }
 
   private double deadband (double inValue, double minValue) {
@@ -70,6 +71,102 @@ public class Robot extends TimedRobot {
     }
   }
   
+  public void autonomousInit() {
+  theTimer = new Timer(0);
+  }
+
+  public void autonomousPeriodic() {
+    double autoStep = 1;
+    /* Auto for ONE or more cubes */
+    // step 1
+    // Launch starting cube
+    if (autoStep == 1) {
+      theTimer.reset(1000);
+      theShooter.intake();
+      theShooter.shoot(0); // does a lob shot from starting position
+      if (theTimer.timerElasped() == true) {
+        autoStep = 2;
+      }
+    }
+    /* Auto for TWO or more cubes */
+    // step 2
+    // Drop flag
+    if (autoStep == 2) {
+      theTimer.reset(1000);
+      theShooter.dropFlag();
+      if (theTimer.timerElasped() == true) {
+        autoStep = 3;
+      }
+    }
+    // step 3
+    // Drive backwards
+    
+    // step 4
+    // Intake cube 
+    if (autoStep == 4) {
+      theTimer.reset(1000);
+      theShooter.intake();
+      if (theTimer.timerElasped() == true) {
+        autoStep = 5;
+      }
+    }
+    // step 5
+    // Drive foward 
+
+    // step 6
+    // Shoot cube and move sideways
+
+    /* Auto for THREE or more cubes, otherwise jump to step 19 */
+    // step 7
+    // Drive backward
+
+    // step 8
+    // Intake cube
+
+    // step 9
+    // Drive foward
+
+    // step 10
+    // Shoot cube and move sideways
+
+    /* Auto for FOUR or more cubes, otherwise jump to step 19 */
+    // step 11
+    // Drive backward
+
+    // step 12
+    // Intake cube
+
+    // step 13
+    // Drive foward
+
+    // step 14
+    // Shoot cube and move sideways
+
+    /* Auto for all FIVE cubes, otherwise jump to step 19 */
+    // step 15
+    // Drive backward
+
+    // step 16 
+    // Intake cube
+
+    // step 17
+    // Drive forward
+
+    // step 18 
+    // Shoot cube
+    
+    /* Autos 2, 3, 4, and 5 use this step */
+    // step 19
+    // Raise flag
+    if (autoStep == 19) {
+      theTimer.reset(1000);
+      theShooter.raiseFlag();
+      if (theTimer.timerElasped() == true) {
+        autoStep = 20;
+      }
+    }
+  } // end of autonomousPeriodic
+
   @Override
   public void teleopPeriodic() {
       /* drive controls */
@@ -83,18 +180,32 @@ public class Robot extends TimedRobot {
       rightX = rightX * 0.35;
     }
 
-    theDrivetrain.driveRobot(leftY, leftX, rightX);
+    if (driveStick.getLeftBumperPressed()) {
+      theDrivetrain.logPosition();
+    }
+
+    if (driveStick.getBButtonPressed()) {
+      theDrivetrain.resetGyroTarget();
+    }
+    if (driveStick.getAButton()){
+      theDrivetrain.driveToPosition(47.36, -73.61);
+    } else {
+      theDrivetrain.driveRobot(leftY, leftX, rightX);
+    }
       /* end drive controls */
     
       /* shooting controls */
     if (opStick.getAButton()) { // high shelf 
       theShooter.shoot(2);
+      theShooter.intake();
     }
     if (opStick.getBButton()) { // high on low battery 
       theShooter.shoot(3);
+      theShooter.intake();
     }
     if (opStick.getYButton()) { // mid shelf 
       theShooter.shoot(1);
+      theShooter.intake();
     }
     if (opStick.getXButton()) { // full speed lob shot
       theShooter.shoot(0);
@@ -109,8 +220,8 @@ public class Robot extends TimedRobot {
       /* end of shooter control */
 
       /* flag control */ 
-    flag.set(opStick.getRightY());
+    //flag.set(opStick.getRightY());
       /* end of flag control */
-  }
+  } // end of teleopPeriodic
 }
 
